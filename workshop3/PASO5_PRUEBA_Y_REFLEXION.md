@@ -2,9 +2,7 @@
 
 ## Resultados de las pruebas
 
-Se ejecutaron las 6 preguntas del enunciado sobre la interfaz Gradio del asistente construido en `05_solucion_asistente_documentos.ipynb`. El modelo utilizado fue `gemini-2.5-flash-lite` con el texto completo del paper inyectado como `system_instruction`.
-
----
+## Se ejecutaron las 6 preguntas del enunciado sobre la interfaz Gradio del asistente construido en `05_solucion_asistente_documentos.ipynb`. El modelo utilizado fue `gemini-2.5-flash-lite` con el texto completo del paper inyectado como `system_instruction`.
 
 ### Pregunta 1 — Arquitectura principal
 
@@ -64,7 +62,7 @@ Se ejecutaron las 6 preguntas del enunciado sobre la interfaz Gradio del asisten
 
 **Comportamiento:** El modelo respondió:
 
-> *"Esa información no se encuentra en el documento proporcionado."*
+> _"Esa información no se encuentra en el documento proporcionado."_
 
 GPT-4 no existe en el paper "Attention Is All You Need" (publicado en 2017). A pesar de que `gemini-2.5-flash-lite` tiene conocimiento sobre GPT-4 por su entrenamiento, respetó la instrucción del system prompt y no filtró información externa. Este es el comportamiento correcto para un asistente de documentos en producción.
 
@@ -87,9 +85,9 @@ Los LLMs modernos siguen instrucciones de sistema con alta fidelidad cuando esta
 
 ### ¿Es esta restricción completamente confiable?
 
-No. "Attention Is All You Need" es un paper público ampliamente presente en los datos de entrenamiento de Gemini. El modelo *conoce* su contenido de memoria. En este caso la restricción funcionó, pero en otros escenarios el modelo podría:
+No. "Attention Is All You Need" es un paper público ampliamente presente en los datos de entrenamiento de Gemini. El modelo _conoce_ su contenido de memoria. En este caso la restricción funcionó, pero en otros escenarios el modelo podría:
 
-- Responder con información correcta que *coincide* con el documento pero que en realidad proviene de su entrenamiento.
+- Responder con información correcta que _coincide_ con el documento pero que en realidad proviene de su entrenamiento.
 - Elaborar detalles que no están en el texto exacto del PDF pero que son consistentes con el conocimiento general del paper.
 - Ignorar la restricción ante preguntas formuladas de cierta manera (prompt injection o jailbreak).
 
