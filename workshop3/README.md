@@ -40,6 +40,7 @@ GEMINI_API_KEY="tu_key_aqui"
 ## Cómo ejecutar
 
 1. Activa el entorno virtual:
+
    ```bash
    # Windows
    .venv\Scripts\activate
@@ -50,6 +51,7 @@ GEMINI_API_KEY="tu_key_aqui"
 3. Ejecuta las celdas en orden (Shift+Enter).
 
 4. Cuando la celda del Paso 4 se ejecute, abre tu navegador en:
+
    ```
    http://localhost:8080
    ```
@@ -89,7 +91,7 @@ Todo el texto del documento se envía como parte del `system_instruction` en **c
 
 - **Costo de tokens**: cada turno de conversación paga el costo de entrada del documento completo (aunque algunos proveedores ofrecen cache de prefijos).
 - **Límite de ventana de contexto**: un documento de 1000 páginas tiene aproximadamente 500K–1M tokens, lo que saturaría la ventana de la mayoría de modelos (y en el caso de Gemini Flash, la agotaría rápidamente cuando se suma el historial de la conversación).
-- **Degradación de atención** (*lost in the middle*): los LLMs tienden a prestar más atención al inicio y al final del contexto. En documentos muy largos, información del medio puede ignorarse.
+- **Degradación de atención** (_lost in the middle_): los LLMs tienden a prestar más atención al inicio y al final del contexto. En documentos muy largos, información del medio puede ignorarse.
 - **Latencia**: procesar un contexto de 1M tokens en cada turno aumenta significativamente el tiempo de respuesta.
 - **No escala a múltiples documentos**: si el corpus crece (100 PDFs, una base de conocimiento corporativa), este enfoque es inviable.
 
@@ -99,11 +101,12 @@ Todo el texto del documento se envía como parte del `system_instruction` en **c
 
 En lugar de inyectar el documento completo, RAG:
 
-1. **Indexa** el corpus dividiéndolo en *chunks* (fragmentos) y generando un embedding vectorial por chunk.
+1. **Indexa** el corpus dividiéndolo en _chunks_ (fragmentos) y generando un embedding vectorial por chunk.
 2. **Recupera** solo los k chunks más relevantes a la pregunta del usuario (búsqueda semántica por similitud de embeddings).
 3. **Genera** la respuesta con Gemini usando únicamente esos k chunks como contexto.
 
 Esto permite:
+
 - Manejar corpus de **miles de documentos** sin límite de contexto.
 - Reducir el **costo por request** (solo k chunks en lugar del documento completo).
 - **Actualizar** el corpus sin reentrenar el modelo (solo re-indexar).
@@ -119,15 +122,13 @@ La contrapartida es mayor complejidad de infraestructura: se necesita una base d
 
 1. **Test de dato modificado**: altera un número en el PDF local (por ejemplo, cambia "6 encoder layers" por "9 encoder layers") y pregunta cuántas capas tiene el encoder. Si el modelo responde "6" (lo correcto históricamente), está usando su memoria paramétrica. Si responde "9", está leyendo el documento.
 
-2. **Exigir cita textual**: pide que incluya siempre una cita literal del documento. Si la cita no aparece en el PDF, se filtraron datos del entrenamiento.
+2. **Exigir cita textual**: Se pide que incluya siempre una cita literal del documento. Si la cita no aparece en el PDF, se filtraron datos del entrenamiento.
 
-3. **Preguntar algo que no está en el paper**: la pregunta trampa *"¿Qué es GPT-4?"* no tiene respuesta en el paper. Si el modelo responde con información correcta sobre GPT-4, está ignorando la instrucción de ceñirse al documento y usando su conocimiento general.
+3. **Preguntar algo que no está en el paper**: la pregunta trampa _"¿Qué es GPT-4?"_ no tiene respuesta en el paper. Si el modelo responde con información correcta sobre GPT-4, está ignorando la instrucción de ceñirse al documento y usando su conocimiento general.
 
 4. **Inyectar información falsa en el PDF**: añade una sección inventada al documento y verifica que el modelo la "crea". Si también repite esa información falsa, confirma que está leyendo el contexto. Si no la menciona, está usando su entrenamiento.
 
-Esta limitación es inherente a los LLMs con conocimiento previo. RAG no la elimina completamente, pero la mitiga: al recuperar chunks específicos del documento, el modelo tiene menos incentivo para "inventar" o recurrir a su entrenamiento.
-
----
+## Esta limitación es inherente a los LLMs con conocimiento previo. RAG no la elimina completamente, pero la mitiga: al recuperar chunks específicos del documento, el modelo tiene menos incentivo para "inventar" o recurrir a su entrenamiento.
 
 ## Modelo utilizado
 
