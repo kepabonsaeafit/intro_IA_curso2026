@@ -1,0 +1,22 @@
+# Entorno
+.env
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Outputs generados (no van al repo)
+app/outputs/reports/
+app/outputs/graphs/
+
+# PDFs subidos por el usuario
+papers/
+
+# Qdrant local si se persiste a disco
+qdrant_storage/
+
+# Logs
+logs/
+
+# Configuración de Claude
+CLAUDE.md   

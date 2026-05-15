@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResearchCrew</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 2rem;
+      border-bottom: 1px solid #2a2a3e;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; color: #4cc9f0; letter-spacing: 1px; }
+    header p  { color: #888; margin-top: 0.4rem; font-size: 0.95rem; }
+
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem; }
+
+    .hidden { display: none !important; }
+
+    /* ── Formulario ── */
+    #form-section {
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    #form-section h2 { margin-bottom: 1.5rem; color: #4cc9f0; font-size: 1.1rem; }
+
+    label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 0.4rem; }
+
+    textarea#question {
+      width: 100%;
+      height: 110px;
+      background: #0f0f1a;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #e0e0e0;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-bottom: 1.25rem;
+    }
+    textarea#question:focus { outline: none; border-color: #4cc9f0; }
+
+    .file-zone {
+      background: #0f0f1a;
+      border: 2px dashed #2a2a3e;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .file-zone:hover { border-color: #4cc9f0; }
+    .file-zone p { color: #888; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    #pdfs { display: none; }
+    #file-names { font-size: 0.82rem; color: #4cc9f0; margin-top: 0.5rem; min-height: 1rem; }
+
+    button.primary {
+      background: #4cc9f0;
+      color: #0f0f1a;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    button.primary:hover { background: #72d8f8; }
+
+    /* ── Cargando ── */
+    #loading-section {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid #2a2a3e;
+      border-top-color: #4cc9f0;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #loading-section h2 { color: #4cc9f0; margin-bottom: 2rem; }
+
+    .steps { display: flex; flex-direction: column; gap: 0.6rem; max-width: 340px; margin: 0 auto; }
+    .step {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      color: #666;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .step.active   { color: #4cc9f0; border-color: #4cc9f0; }
+    .step.done     { color: #52e07a; border-color: #52e07a; }
+    .step .dot     { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    /* ── Resultados ── */
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    /* Debate grid */
+    .debate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) { .debate-grid { grid-template-columns: 1fr; } }
+
+    .agent-card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .agent-card.hype       { border-top: 3px solid #4cc9f0; }
+    .agent-card.contrarian { border-top: 3px solid #f72585; }
+    .agent-card.arbitro    { border-top: 3px solid #52e07a; }
+    .agent-card.report     { border-top: 3px solid #f4a261; }
+
+    .agent-card h2 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .agent-card h2 span {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: #888;
+      background: #0f0f1a;
+      border-radius: 20px;
+      padding: 2px 8px;
+    }
+
+    .agent-content { font-size: 0.9rem; line-height: 1.7; color: #ccc; }
+    .agent-content p { margin-bottom: 0.75rem; }
+
+    /* Markdown body */
+    .markdown-body           { overflow-x: hidden; word-wrap: break-word; white-space: normal; }
+    .markdown-body h1,h2,h3 { color: #4cc9f0; margin: 1rem 0 0.5rem; }
+    .markdown-body p         { margin-bottom: 0.75rem; line-height: 1.7; }
+    .markdown-body ul        { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+    .markdown-body li        { margin-bottom: 0.3rem; }
+    .markdown-body strong    { color: #e0e0e0; }
+    .markdown-body pre       { white-space: pre-wrap; word-break: break-word; }
+
+    /* Graph */
+    #graph-iframe {
+      width: 100%;
+      height: 520px;
+      border: none;
+      border-radius: 8px;
+      background: #1a1a2e;
+    }
+
+    .card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    #new-research {
+      background: transparent;
+      border: 1px solid #4cc9f0;
+      color: #4cc9f0;
+      border-radius: 8px;
+      padding: 0.65rem 1.75rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    #new-research:hover { background: #4cc9f020; }
+
+    #error-msg {
+      background: #2a0f0f;
+      border: 1px solid #f72585;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      color: #f72585;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ResearchCrew</h1>
+    <p>Debate académico multi-agente sobre literatura científica en IA</p>
+  </header>
+
+  <main>
+
+    <!-- ── Formulario ── -->
+    <section id="form-section">
+      <h2>Nueva investigación</h2>
+
+      <label for="question">Pregunta de investigación</label>
+      <textarea id="question"
+        placeholder="Ej: ¿En qué escenarios los LLMs superan al ML tradicional y en cuáles no?"></textarea>
+
+      <label>Papers académicos (PDF)</label>
+      <div class="file-zone" onclick="document.getElementById('pdfs').click()">
+        <p>Haz clic para seleccionar archivos o arrástralos aquí</p>
+        <input type="file" id="pdfs" accept=".pdf" multiple>
+        <div id="file-names">Ningún archivo seleccionado</div>
+      </div>
+
+      <div id="error-msg" class="hidden"></div>
+
+      <button class="primary" onclick="startResearch()">Iniciar debate</button>
+    </section>
+
+    <!-- ── Cargando ── -->
+    <section id="loading-section" class="hidden">
+      <div class="spinner"></div>
+      <h2>Investigando...</h2>
+      <div class="steps">
+        <div class="step" id="step-search">  <div class="dot"></div>🔍 Search Agent — buscando contexto web</div>
+        <div class="step" id="step-reader">  <div class="dot"></div>📚 Reader Agent — analizando papers</div>
+        <div class="step" id="step-debate">  <div class="dot"></div>⚔️ Debate — Hype vs Contrarian</div>
+        <div class="step" id="step-arbitro"> <div class="dot"></div>⚖️ Árbitro — sintetizando</div>
+        <div class="step" id="step-writer">  <div class="dot"></div>✍️ Writer — generando reporte</div>
+      </div>
+    </section>
+
+    <!-- ── Resultados ── -->
+    <section id="results-section" class="hidden">
+
+      <p class="section-title">Debate</p>
+      <div class="debate-grid">
+        <div class="agent-card hype">
+          <h2>🚀 El Hype <span id="label-hype">Pro-LLMs</span></h2>
+          <div id="hype-content" class="agent-content markdown-body"></div>
+        </div>
+        <div class="agent-card contrarian">
+          <h2>😒 El Contrarian <span id="label-contrarian">Pro-ML Clásico</span></h2>
+          <div id="contrarian-content" class="agent-content markdown-body"></div>
+        </div>
+      </div>
+
+      <p class="section-title">Síntesis</p>
+      <div class="agent-card arbitro" style="margin-bottom:1rem">
+        <h2>⚖️ El Árbitro <span id="label-arbitro">Consenso</span></h2>
+        <div id="arbitro-content" class="agent-content markdown-body"></div>
+      </div>
+
+      <p class="section-title">Reporte final</p>
+      <div class="agent-card report" style="margin-bottom:1rem">
+        <h2>📄 Reporte estructurado</h2>
+        <div id="report-content" class="agent-content markdown-body"></div>
+      </div>
+
+      <p class="section-title">Mapa de conceptos</p>
+      <div class="card" style="padding:0.5rem; margin-bottom:1.5rem;">
+        <iframe id="graph-iframe"></iframe>
+      </div>
+
+      <button id="new-research" onclick="resetUI()">← Nueva investigación</button>
+    </section>
+
+  </main>
+
+  <script>
+    // Cargar modelos reales del .env al iniciar
+    fetch('/config').then(r => r.json()).then(cfg => {
+      document.getElementById('label-hype').textContent        = `Pro-LLMs · ${cfg.hype_model}`;
+      document.getElementById('label-contrarian').textContent  = `Pro-ML Clásico · ${cfg.contrarian_model}`;
+      document.getElementById('label-arbitro').textContent     = `Consenso · ${cfg.arbitro_model}`;
+    }).catch(() => {});
+
+    // Mostrar nombres de archivos seleccionados
+    document.getElementById('pdfs').addEventListener('change', function () {
+      const names = Array.from(this.files).map(f => f.name).join(', ');
+      document.getElementById('file-names').textContent =
+        names || 'Ningún archivo seleccionado';
+    });
+
+    const STEPS = ['step-search', 'step-reader', 'step-debate', 'step-arbitro', 'step-writer'];
+    let stepTimer = null;
+
+    function animateSteps() {
+      let i = 0;
+      stepTimer = setInterval(() => {
+        if (i > 0) document.getElementById(STEPS[i - 1]).classList.replace('active', 'done');
+        if (i < STEPS.length) {
+          document.getElementById(STEPS[i]).classList.add('active');
+          i++;
+        } else {
+          clearInterval(stepTimer);
+        }
+      }, 18000); // ~18 s por agente
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    async function startResearch() {
+      const question = document.getElementById('question').value.trim();
+      const files    = document.getElementById('pdfs').files;
+
+      document.getElementById('error-msg').classList.add('hidden');
+
+      if (!question)       { showError('Escribe una pregunta de investigación.'); return; }
+      if (files.length < 1){ showError('Selecciona al menos un PDF.');           return; }
+
+      // Mostrar pantalla de carga
+      document.getElementById('form-section').classList.add('hidden');
+      document.getElementById('loading-section').classList.remove('hidden');
+      animateSteps();
+
+      const formData = new FormData();
+      formData.append('question', question);
+      for (const file of files) formData.append('pdfs', file);
+
+      try {
+        const res = await fetch('/research', { method: 'POST', body: formData });
+
+        clearInterval(stepTimer);
+        // Marcar todos como done
+        STEPS.forEach(id => {
+          const el = document.getElementById(id);
+          el.classList.remove('active');
+          el.classList.add('done');
+        });
+
+        if (!res.ok) {
+          const detail = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(detail.detail || res.statusText);
+        }
+
+        const data = await res.json();
+
+        // Poblar resultados
+        document.getElementById('hype-content').innerHTML      = marked.parse(data.hype_argument      || '');
+        document.getElementById('contrarian-content').innerHTML = marked.parse(data.contrarian_argument|| '');
+        document.getElementById('arbitro-content').innerHTML    = marked.parse(data.synthesis          || '');
+        document.getElementById('report-content').innerHTML     = marked.parse(data.report             || '');
+        document.getElementById('graph-iframe').srcdoc          = data.graph_html || '';
+
+        document.getElementById('loading-section').classList.add('hidden');
+        document.getElementById('results-section').classList.remove('hidden');
+
+      } catch (err) {
+        clearInterval(stepTimer);
+        document.getElementById('loading-section').classList.add('hidden');
+        document.getElementById('form-section').classList.remove('hidden');
+        showError('Error: ' + err.message);
+      }
+    }
+
+    function resetUI() {
+      document.getElementById('results-section').classList.add('hidden');
+      document.getElementById('form-section').classList.remove('hidden');
+      document.getElementById('research-form-reset');
+      document.getElementById('question').value = '';
+      document.getElementById('pdfs').value = '';
+      document.getElementById('file-names').textContent = 'Ningún archivo seleccionado';
+      document.getElementById('error-msg').classList.add('hidden');
+      STEPS.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('active', 'done');
+      });
+    }
+  </script>
+
+</body>
+</html>

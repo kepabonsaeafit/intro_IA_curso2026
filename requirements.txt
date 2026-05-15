@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+python-multipart
+openai
+markitdown[all]
+langchain-core
+langchain-text-splitters
+langchain-openai
+langchain-community
+faiss-cpu
+langgraph
+ddgs
+langchain-google-genai
+sentence-transformers
+pyvis
+pytest
