@@ -65,7 +65,7 @@ NVIDIA_API_KEY=nvapi-...
 ## Ejecución
 
 ```bash
-uvicorn app.main:app --reload
+.\run.ps1
 ```
 
 Abre [http://localhost:8000](http://localhost:8000) en el navegador.
@@ -96,11 +96,11 @@ Requiere `NVIDIA_API_KEY` configurada. El test de `reader_agent` requiere al men
 
 ## Modelos
 
-| Agente | Modelo (producción) | Variable |
-|---|---|---|
-| Search + Reader | gemma-3-4b-it (dev) | `DEV_MODEL` |
-| El Hype | mistralai/mistral-large | `HYPE_MODEL` |
-| El Contrarian | z-ai/glm-5.1 | `CONTRARIAN_MODEL` |
+| Agente           | Modelo (producción)         | Variable                         |
+| ---------------- | --------------------------- | -------------------------------- |
+| Search + Reader  | gemma-3-4b-it (dev)         | `DEV_MODEL`                      |
+| El Hype          | mistralai/mistral-large     | `HYPE_MODEL`                     |
+| El Contrarian    | z-ai/glm-5.1                | `CONTRARIAN_MODEL`               |
 | Árbitro + Writer | meta/llama-3.3-70b-instruct | `ARBITRO_MODEL` / `WRITER_MODEL` |
 
 Durante desarrollo todos los agentes usan `DEV_MODEL` para ahorrar créditos.
