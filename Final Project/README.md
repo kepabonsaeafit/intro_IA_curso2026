@@ -77,7 +77,7 @@ Abre [http://localhost:8000](http://localhost:8000) en el navegador.
 1. Escribe una pregunta de investigación sobre LLMs vs ML tradicional
 2. Sube uno o más papers en PDF
 3. Haz clic en **Iniciar debate**
-4. Espera ~3-5 minutos mientras los agentes trabajan
+4. Espera ~5-10 minutos mientras los agentes trabajan
 5. Lee el debate, la síntesis del árbitro y el reporte final
 
 Los reportes se guardan en `app/outputs/reports/` y los grafos en `app/outputs/graphs/`.
