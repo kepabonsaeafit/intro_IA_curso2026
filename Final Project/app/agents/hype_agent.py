@@ -19,7 +19,7 @@ def hype_agent(question: str, shared_context: str, verbose: bool = True) -> str:
             "Usa evidencia del contexto proporcionado. Sé persuasivo pero académicamente riguroso. "
             "Responde en 3-4 párrafos sólidos."
         ),
-        model=os.getenv("HYPE_MODEL", "mistralai/mistral-large"),
+        model=os.getenv("HYPE_MODEL", "mistralai/mistral-large"), # Cambiar en tu .env por el modelo que quieras usar
         verbose=verbose,
         label="ElHype",
     )

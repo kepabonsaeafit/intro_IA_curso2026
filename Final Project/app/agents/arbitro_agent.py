@@ -27,7 +27,7 @@ def arbitro_agent(
             "No tomes partido. Sé justo con ambos argumentos. "
             "Responde en 3-4 párrafos con tono académico neutral."
         ),
-        model=os.getenv("ARBITRO_MODEL", "meta/llama-3.3-70b-instruct"),
+        model=os.getenv("ARBITRO_MODEL", "mistral-large-3-675b-instruct-2512"),# Cambiar en tu .env por el modelo que quieras usar
         verbose=verbose,
         label="ElArbitro",
     )

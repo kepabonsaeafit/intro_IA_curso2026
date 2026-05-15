@@ -12,7 +12,7 @@ client = OpenAI(
     api_key=os.getenv("NVIDIA_API_KEY"),
 )
 
-MODEL = os.getenv("DEV_MODEL", "google/gemma-3-4b-it")
+MODEL = os.getenv("DEV_MODEL", "nemotron-mini-4b-instruct") # Cambiar en tu .env por el modelo que quieras usar
 
 
 def run_agent(

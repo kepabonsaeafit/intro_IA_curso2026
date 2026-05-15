@@ -10,7 +10,7 @@ from app.agents.base import run_agent
 REPORTS_DIR = Path(__file__).parent.parent / "outputs" / "reports"
 GRAPHS_DIR  = Path(__file__).parent.parent / "outputs" / "graphs"
 
-WRITER_MODEL = os.getenv("WRITER_MODEL", "meta/llama-3.3-70b-instruct")
+WRITER_MODEL = os.getenv("WRITER_MODEL", "minimax-m2.7")  # Cambiar en tu .env por el modelo que quieras usar
 
 
 def _generate_report(

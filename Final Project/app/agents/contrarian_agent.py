@@ -19,7 +19,7 @@ def contrarian_agent(question: str, shared_context: str, verbose: bool = True) -
             "Cuestiona las afirmaciones exageradas sobre LLMs. Usa evidencia del contexto proporcionado. "
             "Responde en 3-4 párrafos sólidos."
         ),
-        model=os.getenv("CONTRARIAN_MODEL", "z-ai/glm-5.1"),
+        model=os.getenv("CONTRARIAN_MODEL", "minimax-m2.7"), # Cambiar en tu .env por el modelo que quieras usar
         verbose=verbose,
         label="ElContrarian",
     )
