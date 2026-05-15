@@ -5,12 +5,13 @@ Sube papers en PDF sobre **LLMs vs ML tradicional**, haz una pregunta de investi
 y obtén un debate estructurado entre agentes con personalidades distintas.
 
 **Curso:** Introducción a la Inteligencia Artificial — EAFIT 2026-1
+**Repositorio base:** intro_IA_curso2026
 
 ---
 
 ## Arquitectura
 
-```
+```text
 PDFs + pregunta
       ↓
 Search Agent (DDGS) → Reader Agent (RAG + FAISS)
